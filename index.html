@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Lexicon Pro — Inglés Avanzado</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<div class="grain"></div>
+
+<!-- ████  MENÚ PRINCIPAL  ████ -->
+<div id="s-home" class="screen active">
+  <div class="home-wrap">
+    <header class="home-header">
+      <div class="brand">
+        <span class="brand-icon">✦</span>
+        <span class="brand-name">LEXICON <em>PRO</em></span>
+      </div>
+      <p class="brand-sub">Entrenador de inglés avanzado · C1–C2</p>
+    </header>
+
+    <nav class="mode-grid">
+      <button class="mode-card" data-mode="vocab">
+        <span class="mode-num">01</span>
+        <div class="mode-info">
+          <p class="mode-title">Vocabulario</p>
+          <p class="mode-desc">Ve una palabra en inglés y escribe su significado en español</p>
+        </div>
+        <span class="mode-tag">Palabra → Significado</span>
+      </button>
+
+      <button class="mode-card" data-mode="translate">
+        <span class="mode-num">02</span>
+        <div class="mode-info">
+          <p class="mode-title">Traducción</p>
+          <p class="mode-desc">Lee una oración completa en inglés y tradúcela al español</p>
+        </div>
+        <span class="mode-tag">Oración → Traducción</span>
+      </button>
+
+      <button class="mode-card" data-mode="tense">
+        <span class="mode-num">03</span>
+        <div class="mode-info">
+          <p class="mode-title">Tiempos Verbales</p>
+          <p class="mode-desc">Identifica el tiempo verbal de la oración resaltada</p>
+        </div>
+        <span class="mode-tag">Oración → Tiempo verbal</span>
+      </button>
+
+      <button class="mode-card mode-card--mix" data-mode="mix">
+        <span class="mode-num">✦</span>
+        <div class="mode-info">
+          <p class="mode-title">Modo Mezcla</p>
+          <p class="mode-desc">Los tres modos en una sola sesión aleatoria</p>
+        </div>
+        <span class="mode-tag">Todos los modos</span>
+      </button>
+    </nav>
+
+    <div class="home-config">
+      <div class="cfg-row">
+        <span class="cfg-lbl">TIEMPO POR PREGUNTA</span>
+        <div class="tog-group" id="time-sel">
+          <button class="tog" data-val="0">∞</button>
+          <button class="tog active" data-val="20">20s</button>
+          <button class="tog" data-val="30">30s</button>
+          <button class="tog" data-val="45">45s</button>
+        </div>
+      </div>
+      <div class="cfg-row">
+        <span class="cfg-lbl">PREGUNTAS POR SESIÓN</span>
+        <div class="tog-group" id="qty-sel">
+          <button class="tog" data-val="10">10</button>
+          <button class="tog active" data-val="20">20</button>
+          <button class="tog" data-val="30">30</button>
+        </div>
+      </div>
+    </div>
+
+    <p class="home-hint">Selecciona un modo para comenzar</p>
+  </div>
+</div>
+
+<!-- ████  PANTALLA DE JUEGO  ████ -->
+<div id="s-game" class="screen">
+  <div class="game-layout">
+
+    <!-- Barra superior -->
+    <div class="topbar">
+      <button id="btn-quit" class="btn-quit" title="Salir al menú">✕</button>
+      <div class="topbar-center">
+        <span id="mode-badge" class="mode-badge">VOCABULARIO</span>
+        <div class="prog-wrap">
+          <div class="prog-track"><div id="prog-fill" class="prog-fill"></div></div>
+          <span id="prog-txt" class="prog-txt">0/20</span>
+        </div>
+      </div>
+      <div class="topbar-stats">
+        <div class="tstat"><span class="tstat-v green" id="g-correct">0</span><span class="tstat-l">✓</span></div>
+        <div class="tstat"><span class="tstat-v red" id="g-errors">0</span><span class="tstat-l">✗</span></div>
+        <div class="tstat"><span class="tstat-v amber" id="g-streak">0</span><span class="tstat-l">🔥</span></div>
+      </div>
+    </div>
+
+    <!-- Timer -->
+    <div id="timer-wrap" class="timer-wrap hidden">
+      <div id="timer-fill" class="timer-fill"></div>
+      <span id="timer-num" class="timer-num">20</span>
+    </div>
+
+    <!-- Tarjeta de pregunta -->
+    <div class="q-area">
+
+      <!-- MODO VOCAB -->
+      <div id="q-vocab" class="q-card hidden">
+        <p class="q-label">¿Qué significa esta palabra?</p>
+        <div class="vocab-card">
+          <p class="vc-type" id="vc-type">adjective</p>
+          <h2 class="vc-word" id="vc-word">Ephemeral</h2>
+          <p class="vc-pron" id="vc-pron">/ɪˈfem.ər.əl/</p>
+        </div>
+        <div class="hint-row">
+          <button class="btn-hint" id="vocab-hint-btn">💡 Ver pista</button>
+          <p class="hint-text hidden" id="vocab-hint-txt"></p>
+        </div>
+      </div>
+
+      <!-- MODO TRANSLATE -->
+      <div id="q-translate" class="q-card hidden">
+        <p class="q-label">Traduce esta oración al español</p>
+        <div class="sentence-card">
+          <p class="sc-sentence" id="tr-sentence"></p>
+          <p class="sc-context" id="tr-context"></p>
+        </div>
+        <div class="hint-row">
+          <button class="btn-hint" id="tr-hint-btn">💡 Ver pista</button>
+          <p class="hint-text hidden" id="tr-hint-txt"></p>
+        </div>
+      </div>
+
+      <!-- MODO TENSE -->
+      <div id="q-tense" class="q-card hidden">
+        <p class="q-label">¿Qué tiempo verbal se usa?</p>
+        <div class="sentence-card">
+          <p class="sc-sentence" id="te-sentence"></p>
+          <p class="sc-verb-label">Verbo destacado: <strong id="te-verb"></strong></p>
+        </div>
+        <div class="tense-grid" id="tense-grid">
+          <!-- botones generados por JS -->
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Área de respuesta (vocab + translate) -->
+    <div id="answer-area" class="answer-area">
+      <div class="input-row">
+        <input id="ans-input" class="ans-input" type="text"
+               placeholder="Escribe tu respuesta…"
+               autocomplete="off" spellcheck="false"/>
+        <button id="btn-submit" class="btn-submit">→</button>
+      </div>
+      <div class="input-actions">
+        <button id="btn-skip" class="btn-link">Saltar</button>
+        <span class="input-hint">Enter para confirmar</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ████  FEEDBACK  ████ -->
+<div id="s-feedback" class="screen">
+  <div class="fb-wrap">
+    <div id="fb-icon" class="fb-icon">✓</div>
+    <p id="fb-title" class="fb-title">¡Correcto!</p>
+
+    <div class="fb-body">
+      <div class="fb-block">
+        <p class="fb-lbl">RESPUESTA CORRECTA</p>
+        <p id="fb-correct" class="fb-answer"></p>
+      </div>
+      <div class="fb-block" id="fb-yours-block">
+        <p class="fb-lbl">TU RESPUESTA</p>
+        <p id="fb-yours" class="fb-your-ans"></p>
+      </div>
+      <div class="fb-block" id="fb-extra-block">
+        <p class="fb-lbl" id="fb-extra-lbl">NOTA</p>
+        <p id="fb-extra" class="fb-extra-txt"></p>
+      </div>
+    </div>
+
+    <button id="btn-continue" class="btn-main">Continuar →</button>
+    <p class="kbd-hint">o presiona <kbd>Enter</kbd></p>
+  </div>
+</div>
+
+<!-- ████  RESUMEN FINAL  ████ -->
+<div id="s-summary" class="screen">
+  <div class="sum-wrap">
+    <p class="sum-pre">SESIÓN COMPLETADA</p>
+    <h2 class="sum-grade" id="sum-grade">Excelente</h2>
+    <p class="sum-score" id="sum-score"></p>
+
+    <div class="sum-stats">
+      <div class="sum-stat"><span id="ss-correct" class="ss-val green">0</span><span class="ss-lbl">Correctas</span></div>
+      <div class="sum-stat"><span id="ss-errors"  class="ss-val red">0</span><span class="ss-lbl">Errores</span></div>
+      <div class="sum-stat"><span id="ss-streak"  class="ss-val amber">0</span><span class="ss-lbl">Racha máx.</span></div>
+      <div class="sum-stat"><span id="ss-pct"     class="ss-val">0%</span><span class="ss-lbl">Precisión</span></div>
+    </div>
+
+    <!-- Desglose por modo -->
+    <div class="sum-breakdown" id="sum-breakdown">
+      <p class="sum-bk-title">DESGLOSE POR MODO</p>
+      <div class="sum-bk-grid" id="sum-bk-grid"></div>
+    </div>
+
+    <!-- Palabras/oraciones falladas -->
+    <div class="sum-missed" id="sum-missed">
+      <p class="sum-missed-title">A REPASAR</p>
+      <div id="sum-missed-list" class="sum-missed-list"></div>
+    </div>
+
+    <div class="sum-btns">
+      <button id="btn-again" class="btn-main">Misma sesión</button>
+      <button id="btn-home"  class="btn-ghost">Menú principal</button>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
